@@ -57,13 +57,13 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
 
         # (A) 전처리: BGR 이미지를 RGB로 변환 (MediaPipe는 RGB 입력 사용)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image_rgb.flags.setflags(write=0) # 성능 향상을 위해 이미지 쓰기 방지
+        image_rgb.flags.writeable = False # 성능 향상을 위해 이미지 쓰기 방지
         
         # (B) 자세 추정 (뼈대 추출)
         results = pose.process(image_rgb)
         
         # (C) 후처리: 다시 BGR로 변환 (OpenCV 표시는 BGR 사용)
-        image_rgb.flags.setflags(write=1)
+        image_rgb.flags.writeable = True
         image = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
 
         # (D) 랜드마크 및 연결선 그리기 (CV2 Circle, CV2 Line)
